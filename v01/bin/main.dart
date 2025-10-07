@@ -9,7 +9,11 @@ void main() {
   print('Ange andra talet:');
   String? tal2 = stdin.readLineSync();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   int numerictal2 = int.parse(tal2!);
+=======
+  int numerictal2 = int.parse(tal2!);  
+>>>>>>> Stashed changes
 =======
   int numerictal2 = int.parse(tal2!);  
 >>>>>>> Stashed changes
