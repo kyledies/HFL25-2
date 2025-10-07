@@ -5,7 +5,7 @@ void main() {
   String? tal1 = stdin.readLineSync();
   int numerictal1 = int.parse(tal1!);
   print('Ange andra talet:');
-  String? tal2 = stdin.readLineSync();
+  String? stal2 = stdin.readLineSync();
   int numerictal2 = int.parse(tal2!);
   
   print('Du valde $numerictal1 och $numerictal2');
