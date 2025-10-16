@@ -1,4 +1,4 @@
-name: v02
+name: v03
 description: A sample command-line application.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
@@ -8,6 +8,10 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  http: ^1.5.0
+  dotenv: ^4.2.0
+  enough_ascii_art: ^1.1.2
+  ascii_art_converter: ^1.0.2
   # path: ^1.8.0
 
 dev_dependencies:

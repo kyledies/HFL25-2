@@ -1,6 +1,7 @@
-import 'package:v02/v03.dart' as v02;
+import 'package:v03/v03.dart' as v03;
 import 'dart:io';
-
+//de5032d6bf0e5366a24a3aff009578e8 för superheroapi.com
+// -> https://superheroapi.com/api/de5032d6bf0e5366a24a3aff009578e8/character-id
 // ignore: slash_for_doc_comments
 /**
      * * Viktig Info 
@@ -13,7 +14,7 @@ List<Map<String, dynamic>> heroes = []; // Lista för att lagra hjältar
 
 //String? hero Skapar hero == null "?" gör att den kan vara null
 // int.parse(number!) "!" gör att den inte kan vara null
-void main() {
+void main() { 
   // if heroes == null {
   //   heroes = [];
   // }
@@ -40,13 +41,13 @@ void main() {
     }
     switch (choiceInt) { //switch-case istället för if-else
       case 1:
-        v02.addHero(heroes);
+        v03.addHero(heroes);
         break; // bryter loopen efter att ha lagt till hjälte
       case 2:
-        v02.showHeroes(heroes);
+        v03.showHeroes(heroes);
         break; // bryter loopen efter att ha visat hjältar
       case 3:
-        v02.searchHero(heroes);
+        v03.searchHero(heroes);
         break; // bryter loopen efter att ha sökt hjälte
       case 4:
         print('Avslutar programmet.');

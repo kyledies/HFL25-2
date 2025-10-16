@@ -1,4 +1,4 @@
-typedef Json = Map<String, dynamic>; //skapar alias för Map<String, dynamic>
+typedef JsonMap = Map<String, dynamic>; //skapar alias för Map<String, dynamic>
 
 // Konverterar ett dynamiskt värde till en int, om möjligt.
 int? toInt(dynamic value) {
@@ -20,7 +20,7 @@ List<String>? toStrList(dynamic value) {
 
 // Konverterar ett dynamiskt värde till en JSON-mapp, om möjligt.
 
-Json? toJsonMap(dynamic value) => (value is Map<String, dynamic>) ? value : null;
+JsonMap? toJsonMap(dynamic value) => (value is Map<String, dynamic>) ? value : null;
 // villkor ? om_sant : om_falskt. Villkor: är value en Map<String, dynamic> OM ja => returnera value (Map<String, dynamic>), annars returnera null
 
 //Ovan. => är samma som:
