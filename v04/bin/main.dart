@@ -1,20 +1,31 @@
 import 'package:v04/v04.dart' as v04;
 import 'dart:io';
-//de5032d6bf0e5366a24a3aff009578e8 för superheroapi.com
-// -> https://superheroapi.com/api/de5032d6bf0e5366a24a3aff009578e8/character-id
-// ignore: slash_for_doc_comments
+import 'package:v04/helpers/input_helper.dart' as input;
+import 'package:v04/managers/hero_data_manager.dart';
+import 'package:v04/models/models.dart';
+import 'package:v04/managers/network_manager.dart'; // <- min NetworkManager
+// -> https://superheroapi.com/api/$API_KEY/search/$character ignore: slash_for_doc_comments
 /**
      * * Viktig Info 
      * ? Frågetecken
      * ! Varning 
      * TODO - Lägg till...
-     */
+      * FIXME - Fixa...
+      */
 
-List<Map<String, dynamic>> heroes = []; // Lista för att lagra hjältar
+final net = NetworkManager();
+final heroDataManager = HeroDataManager();
 
 //String? hero Skapar hero == null "?" gör att den kan vara null
 // int.parse(number!) "!" gör att den inte kan vara null
-void main() { 
+void main() async{ 
+  List <Map<String, dynamic>> heroes = [];
+
+  print('Hej och välkommen till Superhjälte-appen!');
+
+  // 🔎 Snabbtest av nätverket
+  final testHero = await net.fetchHeroModel('Batman');
+  print('API-test → ${testHero?.name ?? "ingen träff"}');
   // if heroes == null {
   //   heroes = [];
   // }

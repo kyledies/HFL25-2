@@ -1,7 +1,8 @@
 import 'package:v04/models/hero_model.dart';
 //Definierar kontraktet för HeroDataManager - vilka metoder den måste implementera
-
+// Abstrakt klass för hantering av lagrad hjältedata. För inhämtning av hjältar via API:t används en separat manager.
 abstract class AbstractHeroDataManaging {
+
   /// Lägg till eller uppdatera en hjälte (matchar på id).
   Future<void> addHero(HeroModel hero);
 
