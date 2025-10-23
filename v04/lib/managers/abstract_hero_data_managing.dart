@@ -4,7 +4,7 @@ import 'package:v04/models/hero_model.dart';
 abstract class AbstractHeroDataManaging {
 
   /// Lägg till eller uppdatera en hjälte (matchar på id).
-  Future<void> addHero(HeroModel hero);
+  Future<HeroModel> addHero(HeroModel hero);
 
 // hämtar hela listan med hjältar
   Future<List<HeroModel>> getHeroList();

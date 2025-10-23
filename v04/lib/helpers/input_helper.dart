@@ -14,8 +14,23 @@ String readString(String prompt) {
   }
 }
 
-/// Läser ett heltal. Valbart intervall [min, max].
-/// Om min/max är null begränsas inte den sidan.
+/// Skriver ut prompt och alternativ i lista - MÅSTE välja därifrån
+readOptions(String prompt, List<String> options) {
+  final hint = '[${options.join(', ')}]'; //joinar alt för print
+  while (true) {
+    stdout.write('$prompt: $hint');
+    final input = stdin.readLineSync();
+    final value = input?.trim().toUpperCase();
+
+    if (options.contains(value)) {
+      return value;
+    }
+    print('Ogiltigt val: Ange ett av: $hint');
+  }
+}
+
+
+/// Läser ett heltal där detta är required. Valbart intervall [min, max].
 int readInt(String prompt, {int? min, int? max}) {
   while (true) {
     stdout.write(prompt);
@@ -41,7 +56,7 @@ int readInt(String prompt, {int? min, int? max}) {
   }
 }
 
-/// Läser ett heltal eller tomt värde (returnerar null om användaren bara trycker Enter).
+/// Läser ett heltal där detta är optional
 /// Valbart intervall [min, max] om användaren anger ett tal.
 int? readOptionalInt(String prompt, {int? min, int? max}) {
   while (true) {

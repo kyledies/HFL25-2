@@ -6,7 +6,7 @@ import 'package:v04/models/hero_model.dart';
 // Definierar kontraktet för NetworkManager - vilka metoder den måste implementera
 abstract class NetworkServiceManaging {
   Future<List<Map<String, dynamic>>?> fetchHero(String heroName);
-  Future<HeroModel?> fetchHeroModel(String heroName);
+  Future<List<HeroModel>?> fetchHeroModel(String heroName); //Lista med HeroModel -> Tom lista om ingen hittas
 }
 
 class NetworkManager implements NetworkServiceManaging {
@@ -28,23 +28,35 @@ class NetworkManager implements NetworkServiceManaging {
   @override
   Future <List<Map<String, dynamic>>?> fetchHero(String heroName) async {
     // Implementera nätverksanrop för att hämta hjältedata som en karta
-    final url = '$baseUrl/search/$heroName';
+    final url = '$baseUrl/search/${Uri.encodeComponent(heroName)}';
     try {
       final response = await http.get(Uri.parse(url));
+      //response.body har nu json-datat vi kommer bearbeta
       if (response.statusCode != 200) {
-        print('HTTP fel: ${response.statusCode} – ${response.reasonPhrase}');
+        print('HTTP fel: ${response.statusCode} (Råkade du ange Å/Ä/Ö?)');
         return null;
       }
-      final heroData = jsonDecode(response.body);
-      if (heroData is! Map<String, dynamic>) return null;
-      if ((heroData['response'] ?? '') != 'success') return null;
+      // Får nedan ut map med key:vals 1 - response , 2 - results-for, 3 - lista med {herodata}
+      final heroData = jsonDecode(response.body); 
+      //Om svar ej är Map - bryt
+      if (heroData is! Map<String, dynamic>) {
+        print('Oväntat svarsformat från API - Försök igen');
+        return null;
+      }
+      //saknas fält response, eller response != success
+      if ((heroData['response'] ?? '') != 'success') {
+        //print('Ingen träff för din sökterm ${heroName}');
+        return null;
+      }
 
       final results = heroData['results'];
       if (results is List) {
-        // Säker cast till List<Map<String, dynamic>>
+        // results är nu en list med map - varje map har 8 element (id, name, powerstats...)
+        //nedan filtreras icke-map bort samt typear vi varje map till Map<String, dynamic> och
+        //lägger i lista.
         return results
-            .whereType<Map>() // filtrera bort ev. skräp
-            .map((e) => Map<String, dynamic>.from(e as Map))
+            .whereType<Map>() // filtrera icke-map
+            .map((e) => Map<String, dynamic>.from(e as Map)) 
             .toList();
       }
       return null;
@@ -52,29 +64,24 @@ class NetworkManager implements NetworkServiceManaging {
       print('Fel vid hämtning av hjälte: $e');
       return null;
     } finally {
-      // valfri logging
       // print('Nätverksanrop slutfört.');
     }
   }
 
   @override
-  Future<HeroModel?> fetchHeroModel(String heroName) async {
+  Future<List<HeroModel>> fetchHeroModel(String heroName) async {
     try {
-      final results = await fetchHero(heroName);
+      final results = await fetchHero(heroName); //inväntar svar från fetchHero, som är en lista med mappar
       if (results == null || results.isEmpty) {
-        print('Ingen hjälte hittades med namnet: $heroName');
-        return null;
+        return <HeroModel>[]; // Returnerar tom lista om ingen hjälte hittades
       }
-      // Ta första träffen och bygg modell
-      if (results.length>1) {
-        print('${results.length} hjältar hittades. Använder första träffen: ${results.first['name']}');
-      } else {
-        print('Hjälte hittad: ${results.first['name']}');
-      }
-      return HeroModel.fromJson(results.first);
+      //res.map... -> gör om varje element till något nytt
+      // I listan results har vi flera element (varje element = decodad json -> map<String, dynamic>)
+      //results.map((json) => Hero... .tolist()) -> För varje element, skapa heroobjekt och lägg i lista.
+      return results.map((json) => HeroModel.fromJson(json)).toList();
     } catch (e) {
-      print('Fel vid skapande av HeroModel: $e');
-      return null;
+      print('Fel vid skapande av HeroModel lista: $e');
+      return <HeroModel>[];
     }
   }
 }

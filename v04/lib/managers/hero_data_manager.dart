@@ -4,7 +4,7 @@ import 'package:v04/models/hero_model.dart';
 final class HeroDataManager implements AbstractHeroDataManaging {
   //singleton
   HeroDataManager._internal(); // Privat konstruktor
-  static final HeroDataManager _instance = HeroDataManager._internal();
+  static final HeroDataManager _instance = HeroDataManager._internal(); // En enda instans skapas
   factory HeroDataManager() => _instance; // Fabrikskonstruktor som alltid returnerar samma instans
 
   // Intern lista för att lagra hjältar
@@ -15,7 +15,7 @@ final class HeroDataManager implements AbstractHeroDataManaging {
   }
 
   @override
-  Future<void> addHero(HeroModel hero) async {
+  Future<HeroModel> addHero(HeroModel hero) async {
     final index = _indexOfId( hero.id);
     if (index >= 0) {
       // Uppdatera befintlig hjälte
@@ -24,6 +24,7 @@ final class HeroDataManager implements AbstractHeroDataManaging {
       // Lägg till ny hjälte
       _heroes.add(hero);
     }
+    return hero;
   }
 
   @override
