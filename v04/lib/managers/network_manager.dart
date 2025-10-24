@@ -9,6 +9,8 @@ abstract class NetworkServiceManaging {
   Future<List<HeroModel>?> fetchHeroModel(String heroName); //Lista med HeroModel -> Tom lista om ingen hittas
 }
 
+//------------------------------------------------------------------------------//
+
 class NetworkManager implements NetworkServiceManaging {
   //singleton
   NetworkManager._internal(); // Privat konstruktor
@@ -78,7 +80,7 @@ class NetworkManager implements NetworkServiceManaging {
       //res.map... -> gör om varje element till något nytt
       // I listan results har vi flera element (varje element = decodad json -> map<String, dynamic>)
       //results.map((json) => Hero... .tolist()) -> För varje element, skapa heroobjekt och lägg i lista.
-      return results.map((json) => HeroModel.fromJson(json)).toList();
+      return results.map((decoded_list) => HeroModel.fromJson(decoded_list)).toList();
     } catch (e) {
       print('Fel vid skapande av HeroModel lista: $e');
       return <HeroModel>[];

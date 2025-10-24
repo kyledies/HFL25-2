@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import '../helpers/json_helper.dart';
 import 'appearance.dart';
 import 'biography.dart';
@@ -31,7 +33,7 @@ import 'work.dart';
  */ 
 
 class HeroModel {
-  final String id;
+  final int id;
   final String name; //ID och name är req till en början...
   final Powerstats? powerstats;
   final Biography? biography;
@@ -53,7 +55,7 @@ class HeroModel {
 
   factory HeroModel.fromJson(JsonMap json) {
     // Vanliga fallgropar: id/name kan saknas -> kasta tydligt fel
-    final id = toStr(json['id']);
+    final id = toInt(json['id']);
     final name = toStr(json['name']);
     if (id == null || name == null) {
       throw FormatException('HeroModel requires non-null id and name');

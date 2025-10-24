@@ -20,7 +20,7 @@ readOptions(String prompt, List<String> options) {
   while (true) {
     stdout.write('$prompt: $hint');
     final input = stdin.readLineSync();
-    final value = input?.trim().toUpperCase();
+    final value = input?.trim().toLowerCase();
 
     if (options.contains(value)) {
       return value;

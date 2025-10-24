@@ -17,6 +17,16 @@ class Powerstats{ //väljer String för att matcha API?
     this.combat,
   });
 
+  /// Medelvärde av befintliga stats (0–100), eller null om inga finns
+  double? get avg {
+    final vals = [
+      intelligence, strength, speed, durability, power, combat
+    ].whereType<int>(); // filtrerar bort null
+    if (vals.isEmpty) return null;
+    final sum = vals.reduce((a, b) => a + b);
+    return sum / vals.length;
+  }
+
   // typedef Json = Map<String, dynamic>; //skapar alias för Map<String, dynamic>
   // Factory konstruktor som skapar Powerstats objekt från JSON data (Map<String, dynamic>)
   factory Powerstats.fromJson(JsonMap json) => Powerstats(
