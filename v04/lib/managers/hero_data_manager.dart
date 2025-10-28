@@ -26,6 +26,8 @@ final class HeroDataManager implements HeroDataManaging {
   factory HeroDataManager() => _instance; // Fabrikskonstruktor som alltid returnerar samma instans
 
   // Intern lista för att lagra hjältar
+  // Denna skapas EN GÅNG - första gången manager initieras.
+  // Vid start - addHero anropas och fyller på från inläst data/heroes.json
   final List<HeroModel> _heroes = [];
   
 
@@ -55,6 +57,7 @@ final class HeroDataManager implements HeroDataManaging {
   }
 
   @override
+  //sökfunktion där vi letar bland alla hjältars name efter träff mot sökterm
   Future<List<HeroModel>> searchHero(String query) async {
     final q = query.trim().toLowerCase();
     if (q.isEmpty) return [];

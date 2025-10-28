@@ -80,7 +80,7 @@ class NetworkManager implements NetworkServiceManaging {
       //res.map... -> gör om varje element till något nytt
       // I listan results har vi flera element (varje element = decodad json -> map<String, dynamic>)
       //results.map((json) => Hero... .tolist()) -> För varje element, skapa heroobjekt och lägg i lista.
-      return results.map((decoded_list) => HeroModel.fromJson(decoded_list)).toList();
+      return results.map((decodedList) => HeroModel.fromJson(decodedList)).toList();
     } catch (e) {
       print('Fel vid skapande av HeroModel lista: $e');
       return <HeroModel>[];

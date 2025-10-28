@@ -1,9 +1,7 @@
-//import 'package:v04/v04.dart' as v04;
-import 'dart:io';
 import 'package:v04/helpers/input_helper.dart' as input;
 import 'package:v04/helpers/manual_add_hero.dart'; //För manuell input
 import 'package:v04/helpers/add_by_api.dart';
-//import 'package:v04/models/models.dart'; // Importerar alla modeller
+import 'package:v04/helpers/ascii_portrait.dart';
 import 'package:v04/managers/hero_data_manager.dart'; // <- min HeroDataManager
 import 'package:v04/managers/file_storage_manager.dart'; // <- min FileStorageManager
 import 'package:v04/managers/network_manager.dart'; // <- min NetworkManager
@@ -19,7 +17,7 @@ import 'package:v04/helpers/show_menu.dart';
 
 //Initierar NetworkManager, HeroDataManager, FileStorageManager
 final net = NetworkManager();
-final manager = HeroDataManager();
+final manager = HeroDataManager(); 
 final storage = FileStorageManager(path: 'data/heroes.json');
 
 //String? hero Skapar hero == null "?" gör att den kan vara null
@@ -33,34 +31,6 @@ void main() async{
   print('Hej och välkommen till Superhjälte-appen!');
 
   while (true) { 
-//     print('Ange val (1-4) eller 5 för att avsluta:');
-//     await Future.delayed(Duration(milliseconds: 500)); // liten fördröjning för ögat
-//     print('1. Lägg till hjälte manuellt');
-//     await Future.delayed(Duration(milliseconds: 400)); 
-//     print('2. Lägg till hjälte via API');
-//     await Future.delayed(Duration(milliseconds: 300)); 
-//     print('3. Visa alla hjältar');
-//     await Future.delayed(Duration(milliseconds: 200)); 
-//     print('4. Sök hjälte lokalt');
-//     await Future.delayed(Duration(milliseconds: 100)); 
-//     print('5. Spara och Avsluta'); 
-//     await Future.delayed(Duration(milliseconds: 100)); 
-//     print('6. Rensa ALL Data');
-
-// //Input från användaren. 
-//     final choice = stdin.readLineSync(); // final OK då det sätts varje gång i loopen
-//     if (choice == null || choice.trim().isEmpty) {  //Hantera null eller tom inmatning
-//       print('Ogiltigt val (tom sträng/null).');
-//       continue; // Går tillbaka till början av loopen
-//     }
-// // Konvertera inmatning till int och hantera felaktig inmatning (icke-numerisk)
-
-//     //* final int? choiceInt <- kan vara null Försöker konvertera till int
-//     final choiceInt = int.tryParse(choice.trim()); // Försöker konvertera till int, trimmar whitespace
-//     if (choiceInt == null) { 
-//       print('Ogiltigt val (icke heltal).');
-//       continue; // Går tillbaka till början av loopen
-//     }
     await printMainMenu();
     final choice = readMainMenuChoice();
 
@@ -85,8 +55,9 @@ void main() async{
       case 3:
         final list = await manager.getHeroList();
         if (list.isEmpty) {
-          print('📝 Inga hjältar ännu.');
+          print('Inga hjältar ännu.');
         } else {
+          //Loopar igenom heroes och printar ut powerstats-snitt
           for (var i = 0; i < list.length; i++) {
             final h = list[i];
             print('${i + 1}. ${h.name} (id: ${h.id}, Powerstat-snitt: ${h.powerstats?.avg?.toStringAsFixed(2)})');
@@ -97,19 +68,70 @@ void main() async{
 
       // Sök hjälte lokalt
       case 4:
-        print('TODO : Sök hjälte lokalt');
-        //heroes = await heroDataManager.searchHero(heroes);
-        break; // bryter loopen efter att ha sökt hjälte
-      
-      // Avsluta programmet
+        while (true) {
+          final searchKey = input.readString("Ange sökterm: ");
+          final heroes = await manager.searchHero(searchKey);
+
+          if (heroes.isEmpty) {
+            print('Ingen hjälte hittades lokalt med söktermen "$searchKey".');
+            final repeat = input.readOptions('Vill du söka igen?', ['ja', 'nej']);
+            if (repeat == 'ja') {
+              continue;
+            } else {
+              break;
+            }
+          } else {
+              print('***Hjältar lokalt som matchar söksträng ${searchKey}:');
+              for (var i = 0; i < heroes.length; i++) {
+                final h = heroes[i];
+                print('${i + 1}. ${h.name} (id: ${h.id}, Powerstat-snitt: ${h.powerstats?.avg?.toStringAsFixed(2)})');
+              }
+                print("*** ${heroes.length} lagrade hjältar printade ovan ***");
+              final repeat = input.readOptions('Vill du söka igen?', ['ja', 'nej']);
+              if (repeat == 'ja') {
+                continue;
+              } else {
+                break;
+              }
+            }
+        }
+             
+      // Sortera lokala hjältar på Strength
       case 5:
+        final list = await manager.sortHeroesByStrength();
+        if (list.isEmpty) {
+          print('Inga hjältar ännu.');
+        } else {
+          //Loopar igenom heroes och printar ut powerstats-snitt
+          print('***Hjältar sorterade på STRENGTH:');
+          for (var i = 0; i < list.length; i++) {
+            final h = list[i];
+            print('${i + 1}. ${h.name} (id: ${h.id}, Strength: ${h.powerstats?.strength}, Powerstat-snitt: ${h.powerstats?.avg?.toStringAsFixed(2)})');
+          }
+          print("*** ${list.length} lagrade hjältar printade ovan ***");
+        }
+        break; // bryter loopen efter att ha sökt hjälte
+
+      case 6:
+        while (true) {
+          await showHeroAsciiArt(manager);
+          final repeat = input.readOptions('Vill skapa ett till porträtt?', ['ja', 'nej']);
+          if (repeat == 'ja') {
+            continue; //vi frågar vidare
+          } else {
+            break;
+          }
+        } 
+
+      // Avsluta programmet
+      case 7:
         print('Sparar och Avslutar programmet.');
         final all = await manager.getHeroList();
         await storage.saveAll(all);
         return;
       
       // Rensar Lagring 
-      case 6:
+      case 8:
         final terminator = input.readOptions("ÄR DU SÄKER PÅ ATT DU VILL TA BORT ALL DATA?", ['ja', 'nej']);
         if (terminator == 'ja') {
           await storage.clearAll();

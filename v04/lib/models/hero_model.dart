@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import '../helpers/json_helper.dart';
 import 'appearance.dart';
 import 'biography.dart';

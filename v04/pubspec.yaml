@@ -12,6 +12,7 @@ dependencies:
   dotenv: ^4.2.0
   enough_ascii_art: ^1.1.2
   ascii_art_converter: ^1.0.2
+  image: ^4.1.7
   # path: ^1.8.0
 
 dev_dependencies:
